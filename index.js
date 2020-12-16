@@ -37,7 +37,7 @@ let people = [
 
 app.get('/api/people', (req, res) => {
     Person.find({}).then(people => {
-        res.json(people)
+        res.json(people.map(person => person.toJSON))
     })
 })
 
