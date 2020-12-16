@@ -1,4 +1,3 @@
-const { response, request } = require('express')
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
@@ -27,7 +26,6 @@ app.get('/api/persons/:id', (req, res, next) => {
       }
     })
     .catch(error => next(error))
-    
 })
 
 app.get('/api/info', (req, res) => {
@@ -48,13 +46,13 @@ app.post('/api/persons', (req, res, next) => {
 
   if(!body.name) {
     return res.status(400).json({
-        error: 'name missing'
+      error: 'name missing'
     })
   } else if(!body.number){
-    return res.status(400).json({ 
-        error: 'number missing' 
+    return res.status(400).json({
+      error: 'number missing'
     })
-  } 
+  }
 
   const person = new Person({
     name: body.name,
@@ -64,12 +62,12 @@ app.post('/api/persons', (req, res, next) => {
   person.save().then(savedPerson => {
     res.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -91,12 +89,12 @@ app.put('/api/persons/:id', (req, res, next) => {
 const errorhandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if(error.name == 'CastError'){
-    return response.status(400).send({error: 'incorrect id'})
+  if(error.name === 'CastError'){
+    return response.status(400).send({ error: 'incorrect id' })
   }
 
-  if(error.name == 'ValidationError'){
-    return response.status(400).send({error: error.message})
+  if(error.name === 'ValidationError'){
+    return response.status(400).send({ error: error.message })
   }
 
   next(error)
