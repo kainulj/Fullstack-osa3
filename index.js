@@ -43,7 +43,7 @@ const generateId = () => {
 }
 */
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if(!body.name) {
@@ -64,6 +64,7 @@ app.post('/api/persons', (req, res) => {
   person.save().then(savedPerson => {
     res.json(savedPerson)
   })
+  .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -92,6 +93,10 @@ const errorhandler = (error, request, response, next) => {
 
   if(error.name == 'CastError'){
     return response.status(400).send({error: 'incorrect id'})
+  }
+
+  if(error.name == 'ValidationError'){
+    return response.status(400).send({error: 'entry not unique'})
   }
 
   next(error)
